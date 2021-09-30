@@ -1,0 +1,51 @@
+version: '3.6'
+
+networks:
+  web:
+  # web: # perhaps for the future if serving using reverse-proxy
+
+volumes:
+  # perhaps for the redis data?
+  # mongo storage
+  db_doc:
+
+services:
+  # development shell SOME TEMP
+  node_shell:
+    image: booellean/node-shell:16.9.1
+    # build:
+      # context: ./
+      # dockerfile: ./images/node-shell/Dockerfile
+    working_dir: /docker/_code
+    restart: 'no'
+    volumes:
+      - ./:/docker:cached
+      - ./secrets/.ssh:/root/.ssh
+      # git certs and any secrets go here too
+    networks:
+      web:
+    environment:
+      GIT_USER: ${GIT_USER}
+      GIT_EMAIL: ${GIT_EMAIL}
+
+  # node cms service
+  web_scraper:
+    container_name: web_scraper
+    build:
+      context: ./
+      dockerfile: ./images/scraper/Dockerfile
+  #   image: TODO
+    volumes:
+      - ./_code:/app
+    networks:
+      web:
+    ports:
+      - "5000:5000"
+    environment:
+      SERVICE: start
+      PORT: ${PORT}
+      NAME: ${NAME}
+      BOT_TOKEN: ${BOT_TOKEN}
+      CHANNEL_ID: ${CHANNEL_ID}
+      CHECKS: ${CHECKS}
+      URLS: ${URLS}

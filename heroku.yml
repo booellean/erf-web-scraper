@@ -1,0 +1,13 @@
+build:
+  docker:
+    web_scraper: images/scraper/Dockerfile
+  config:
+    SERVICE: start
+    PORT: ${PORT}
+    NAME: ${NAME}
+    BOT_TOKEN: ${BOT_TOKEN}
+    CHANNEL_ID: ${CHANNEL_ID}
+    CHECKS: ${CHECKS}
+    URLS: ${URLS}
+run:
+  web_scraper: /entrypoint.sh
