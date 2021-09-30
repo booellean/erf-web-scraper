@@ -10,4 +10,6 @@ build:
     CHECKS: ${CHECKS}
     URLS: ${URLS}
 run:
-  web_scraper: /entrypoint.sh
+  image: web_scraper
+  command:
+    - ./entrypoint.sh
