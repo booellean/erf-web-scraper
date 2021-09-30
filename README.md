@@ -10,6 +10,11 @@ http://herkou.example_url.com/scraper
 ## Hosting on Heroku
 Copy the '.env.example' file and rename it to '.env'. If you want Discord Bot integration, read below. Otherwise, the env is ready to go.
 
+- Deploy github
+- Connect on heroku 
+- Add Buildpack
+
+
 ## Adding a Discord Bot
 This bot is discord ready. You will need your bot token and channel id to use this functionality. You copy these values to BOT_TOKEN and CHANNEL_ID respectively. Please use the tutorials below to get started (note: the bot tutorial goes through permissions. Please just copy the permissions from the tutorial)
 
