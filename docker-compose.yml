@@ -33,7 +33,7 @@ services:
     container_name: web_scraper
     build:
       context: ./
-      dockerfile: ./images/scraper/Dockerfile
+      dockerfile: ./Dockerfile
   #   image: TODO
     volumes:
       - ./_code:/app

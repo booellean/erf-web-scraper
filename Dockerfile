@@ -21,6 +21,6 @@ RUN npm install --production
 
 EXPOSE 5000
 
-COPY ./images/scraper/entrypoint.sh /
+COPY ./entrypoint.sh /
 RUN chmod 555 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]

@@ -1,6 +1,6 @@
 build:
   docker:
-    web_scraper: images/scraper/Dockerfile
+    web_scraper: Dockerfile
   config:
     SERVICE: start
     PORT: ${PORT}
