@@ -40,7 +40,7 @@ services:
     networks:
       web:
     ports:
-      - "5000:5000"
+      - "${PORT}:${PORT}"
     environment:
       SERVICE: start
       PORT: ${PORT}

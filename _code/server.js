@@ -27,6 +27,7 @@ routes(app);
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function () {
   console.info(`Node Version: ${process.version}`);
-  console.log('Trello Power-Up Server listening on port ' + listener.address().port);
+  console.log('Web Scraper Server listening on port ' + listener.address().port);
 });
+
 

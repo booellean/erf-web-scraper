@@ -2,14 +2,77 @@ const puppeteer = require('puppeteer');
 const Discord = require("discord.js");
 
 const routes = (app) => {
+
+  const in_stock_url = [];
+  const urls = process.env.URLS.split(',') || [];
+  const check = process.env.CHECKS.split(',') || [];
+  let error = null;
   
   app.get('/scraper', async (req, res) =>{
     res.setHeader('Content-type','text/html')
-    let in_stock_url = [];
 
-    let urls = process.env.URLS.split(',') || [];
-    let check = process.env.CHECKS.split(',') || [];
+    return res.send(`
+      <!DOCTYPE html>
+      <html lang="en">
+          <head>
+              <meta charset="utf-8"> 
+              <style></style>
+              <script></script>
+          </head>
+          <body>
+              <img src="https://cdn.wayscript.com/static/img/logos/logo.png">
+              <div>Hello World</div>
+              <ul id="update">
+              </ul>
+          </body>
+          <script>
 
+          const handleData = (data) =>{
+            window.open("https://youtu.be/4G6QDNC4jPs?t=33")
+
+            let ul = document.getElementById("update");
+
+            data.forEach( url => {
+              window.open(url);
+              let li = document.createElement('li');
+              let a = document.createElement('a');
+              a.setAttribute('href', url);
+              a.setAttribute('target', '_blank');
+              a.innerHTML = url;
+              ul.appendChild(li);
+              li.appendChild(a);
+            })
+          }
+
+          const handleError = (error) => {
+            let ul = document.getElementById("update");
+
+            let li = document.createElement('li');
+            li.innerHTML = error;
+            ul.appendChild(li);
+          }
+
+          const initial_data = [${in_stock_url.map(url => '"'+url+'"').join(',')}];
+          const initital_error = ${error};
+
+          if(initital_error){
+            handleError(initital_error);
+          }
+
+          if(initial_data && initial_data.length > 0){
+            handleData(initial_data);
+          }else{
+            setTimeout( ()=>{
+              window.location.reload(true); 
+            },60000)
+          }
+          </script>
+      </html>
+    `)
+  })
+
+  const findItems = async () =>{
+    console.log('starting...');
     return new Promise( async (resolve, reject) => {
       try{
           for(let i = 0; i < urls.length; i++) {
@@ -59,7 +122,7 @@ const routes = (app) => {
     })
       .then( r =>{
         console.log(new Date());
-        if(r){
+        if(r && r.length > 0){
           try{
             const client = new Discord.Client({ intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES] });
 
@@ -71,98 +134,20 @@ const routes = (app) => {
           }catch(e){
             console.log('bot couldn\'t send message')
           }
-          html = `
-          <!DOCTYPE html>
-          <html lang="en">
-              <head>
-                  <meta charset="utf-8"> 
-                  <style></style>
-                  <script></script>
-              </head>
-              <body>
-                  <img src="https://cdn.wayscript.com/static/img/logos/logo.png">
-                  <div>Hello World</div>
-                  <ul id="update">
-                  `;
-
-          for(var i=0; i<r.length; i++){
-            html += `<li>
-                        <a href="${in_stock_url[i] }" target="_blank">
-                          ${ in_stock_url[i] }
-                        </a>
-                    </li>`;
-          }
-
-          html += `</ul>
-              </body>
-          `
-          if(r.length > 0){
-            html += `
-            <script>
-                    window.open("https://www.youtube.com/watch?v=4G6QDNC4jPs", "_blank")
-            </script>
-            `
-          }else{
-            html += `
-            <script>
-              setTimeout(function(){
-                  location.reload();
-              }, 6000)
-            </script>`
-          }
-
-          html += `</html>`
-
-          return res.send(html)
+          in_stock_url = r;
         }else{
-          return res.send(`
-          <!DOCTYPE html>
-          <html lang="en">
-              <head>
-                  <meta charset="utf-8"> 
-                  <style></style>
-                  <script></script>
-              </head>
-              <body>
-                  <img src="https://cdn.wayscript.com/static/img/logos/logo.png">
-                  <div>Hello World</div>
-                  <ul id="update">
-                  </ul>
-              </body>
-              <script>
-                setTimeout(function(){
-                    location.reload();
-                }, 6000)
-              </script>
-          </html>
-          `)
+          findItems();
         }
+
       }).catch( err => {
         // console.log(err);
-        return res.send(`
-        <!DOCTYPE html>
-        <html lang="en">
-            <head>
-                <meta charset="utf-8"> 
-                <style></style>
-                <script></script>
-            </head>
-            <body>
-                <img src="https://cdn.wayscript.com/static/img/logos/logo.png">
-                <div>Hello World</div>
-                <ul id="update">
-                </ul>
-            </body>
-            <script>
-              setTimeout(function(){
-                  location.reload();
-              }, 6000)
-            </script>
-        </html>
-        `)
-      })
+        error = err;
 
-  })
+        findItems();
+      })
+  }
+
+  findItems();
 }
 
 module.exports = routes;

@@ -9,5 +9,6 @@ then
 else
 # This is production. Serve the app!
     # exec ./scripts/wait-for-it.sh $APOS_MONGODB_URI -- npm start
+    echo "entrypoint read"
     exec npm start
 fi

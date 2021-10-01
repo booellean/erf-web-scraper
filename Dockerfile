@@ -19,8 +19,6 @@ WORKDIR /app
 COPY ./_code /app
 RUN npm install --production
 
-EXPOSE 5000
-
 COPY ./entrypoint.sh /
 RUN chmod 555 /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
